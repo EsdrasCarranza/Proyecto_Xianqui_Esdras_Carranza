@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 public class Tablero extends JPanel {
-Color lightBlue = new Color(0xADD8E6);
+
 
     private static Tablero instancia;
     private static final int CELL_SIZE = 50;
