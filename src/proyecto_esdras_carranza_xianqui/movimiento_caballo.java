@@ -22,13 +22,13 @@ public class movimiento_caballo extends movimiento_pieza {
 
     @Override
     public int getfila(int fila) {
-        // El caballo no tiene restricciones especiales sobre la fila en sí, solo el patrón de movimiento
+      
         return fila;
     }
 
     @Override
     public int getcolumna(int columna) {
-        // El caballo no tiene restricciones especiales sobre la columna en sí, solo el patrón de movimiento
+       
         return columna;
     }
 

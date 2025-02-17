@@ -8,7 +8,7 @@ package proyecto_esdras_carranza_xianqui;
  *
  * @author 50488
  */
-public class Jugadores implements Almacenamiento_info {
+public class Jugadores extends cuentas {
     private static Jugadores instancia;
     private String jugador;
     private int puntos_obtenidos;
@@ -38,8 +38,8 @@ public class Jugadores implements Almacenamiento_info {
         }
     }
 
-    @Override
-    public void sumar_puntos(String user) {
+ 
+    public void sumar(String user) {
         for (int i = 0; i < contador; i++) {
             if (guardado[i] != null && guardado[i].jugador.equals(user)) {
                 guardado[i].puntos_obtenidos += 3;
@@ -52,11 +52,11 @@ public class Jugadores implements Almacenamiento_info {
     public void eliminar_jugador(String user) {
         for (int i = 0; i < contador; i++) {
             if (guardado[i] != null && guardado[i].jugador.equals(user)) {
-                // Desplazar los jugadores restantes para evitar espacios nulos
+              
                 for (int j = i; j < contador - 1; j++) {
                     guardado[j] = guardado[j + 1];
                 }
-                guardado[contador - 1] = null; // Eliminar la última referencia
+                guardado[contador - 1] = null; 
                 contador--;
                 System.out.println("Jugador " + user + " eliminado.");
                 return;
@@ -68,13 +68,13 @@ public class Jugadores implements Almacenamiento_info {
     public String obtener_podio() {
         if (contador == 0) return "No hay jugadores registrados.";
 
-        // Copia del array sin `null`
+     
         Jugadores[] ranking = new Jugadores[contador];
         for (int i = 0; i < contador; i++) {
             ranking[i] = guardado[i];
         }
 
-        // Ordenamiento por Burbuja
+      
         for (int i = 0; i < contador - 1; i++) {
             for (int j = 0; j < contador - i - 1; j++) {
                 if (ranking[j] != null && ranking[j + 1] != null &&
@@ -87,7 +87,7 @@ public class Jugadores implements Almacenamiento_info {
             }
         }
 
-        // Construcción del podio
+        
         String podio = " Podio de Jugadores \n";
         for (int i = 0; i < Math.min(3, contador); i++) {
             if (ranking[i] != null) {

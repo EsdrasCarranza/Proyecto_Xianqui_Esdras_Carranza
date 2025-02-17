@@ -8,7 +8,7 @@ package proyecto_esdras_carranza_xianqui;
  *
  * @author 50488
  */
-public class celda {
+public final class celda {
       private String tipoPieza; 
     private boolean esRojo;   
 
@@ -25,7 +25,7 @@ public class celda {
         return esRojo;
     }
 
-    public void setTipoPieza(String tipoPieza) {
+    public final void setTipoPieza(String tipoPieza) {
         this.tipoPieza = tipoPieza;
     }
 

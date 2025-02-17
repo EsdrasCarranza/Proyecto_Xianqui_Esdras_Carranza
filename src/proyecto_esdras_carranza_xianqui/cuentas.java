@@ -22,11 +22,13 @@ public class cuentas {
     private boolean[] activa = new boolean[MAX_USERS];
     private LocalDate[] fecha = new LocalDate[MAX_USERS];
     private String[] log = new String[MAX_USERS];
-
+    private String[] usuarios_eliminados=new String [MAX_USERS];
+    private int eliminados=0;
     private int contador = 0;
 
-    private cuentas() {
-    }
+  public cuentas(){
+      
+  }
 
     public static cuentas getInstance() {
         if (instancia == null) {
@@ -54,6 +56,10 @@ public class cuentas {
         if (contador >= MAX_USERS) {
             JOptionPane.showMessageDialog(null, "No se pueden registrar más usuarios.");
             return false;
+        }
+        if(useer.length()<2){
+               JOptionPane.showMessageDialog(null, "No ingresar usuario menor a 1 caracter");
+               return false;
         }
         if (contraa.length() > 5) {
             JOptionPane.showMessageDialog(null, "No ingresar contraseña mayor a 5 caracteres");
@@ -155,16 +161,16 @@ public class cuentas {
         }
     }
 
-    public String mostrar_log(String useer) {
-        String loog = "Jugador no existe";
-        for (int i = user.length - 1; i >= 0; i--) {
-            if (user[i] != null && log[i] != null && useer.equals(user[i])) {
-                loog = log[i];
-                break;
-            }
+   public String mostrar_log(String useer) {
+    String loog = "Jugador no existe";
+    for (int i = user.length - 1; i >= 0; i--) {
+        if (user[i] != null && log[i] != null && useer.equals(user[i])) {
+            loog = log[i];
+            break;
         }
-        return loog;
     }
+    return loog;
+}
 
     public void desactivar_cuenta(String useer) {
         for (int i = 0; i < user.length; i++) {
@@ -180,21 +186,39 @@ public class cuentas {
             return true; 
         }
     }
-    return false; // No se encontró coincidencia
+    return false; 
 }
 
-    public void eliminar_cuenta(String useer) {
-        for (int i = 0; i < user.length; i++) {
-            if (user[i] != null && useer.equals(user[i])) {
-                user[i] = null;
-                contra[i] = null;
-                puntos[i] = 0;
-                activa[i] = false;
-                fecha[i] = null;
-                log[i] =null;
+  public void eliminar_cuenta(String useer) {
+    boolean seElimino = false;
+
+    for (int i = 0; i < user.length; i++) {
+        if (user[i] != null && useer.equals(user[i])) {
+            
+            if (eliminados < usuarios_eliminados.length) {
+                usuarios_eliminados[eliminados++] = user[i];
+            }
+
+           
+            user[i] = null;
+            contra[i] = null;
+            puntos[i] = 0;
+            activa[i] = false;
+            fecha[i] = null;
+            log[i] = "Jugador eliminado"; 
+            seElimino = true;
+        }
+    }
+
+   
+    if (seElimino) {
+        for (int i = 0; i < log.length; i++) {
+            if (log[i] != null && log[i].contains(useer)) {
+                log[i] = log[i].replace(useer, "Jugador eliminado");
             }
         }
     }
+}
     
     public void sumar(String useer){
         for (int i = 0; i < user.length; i++) {

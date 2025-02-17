@@ -61,27 +61,27 @@ public class partidas implements organizador_logs {
         if (!ganador) {
             cuentas.getInstance().almacenar_logs(jugador_2, log_ganador);
             cuentas.getInstance().almacenar_logs(jugador_1, log_perdedor);
-            Jugadores.getInstance().sumar_puntos(jugador_2);
+            Jugadores.getInstance().sumar(jugador_2);
             cuentas.getInstance().sumar(jugador_2);
         }else{
             cuentas.getInstance().almacenar_logs(jugador_2, log_perdedor);
             cuentas.getInstance().almacenar_logs(jugador_1, log_ganador);
-            Jugadores.getInstance().sumar_puntos(jugador_1);
-             cuentas.getInstance().sumar(jugador_1);
+            Jugadores.getInstance().sumar(jugador_1);
+            cuentas.getInstance().sumar(jugador_1);
         }
     }
 
-    @Override
+   
     public void distribuir_logsrendidos(boolean ganado, String loog1, String loog2) {
         if (ganado) {
             cuentas.getInstance().almacenar_logs(jugador_2, loog1);
             cuentas.getInstance().almacenar_logs(jugador_1, loog2);
-            Jugadores.getInstance().sumar_puntos(jugador_2);
+            Jugadores.getInstance().sumar(jugador_2);
             cuentas.getInstance().sumar(jugador_2);
         }else{
             cuentas.getInstance().almacenar_logs(jugador_2, loog2);
             cuentas.getInstance().almacenar_logs(jugador_1, loog1);
-            Jugadores.getInstance().sumar_puntos(jugador_1);
+            Jugadores.getInstance().sumar(jugador_1);
              cuentas.getInstance().sumar(jugador_1);
         }
     }

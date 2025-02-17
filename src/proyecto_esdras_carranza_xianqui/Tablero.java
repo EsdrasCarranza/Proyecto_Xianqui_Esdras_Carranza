@@ -68,8 +68,9 @@ public class Tablero extends JPanel {
         turnoLabel.setFont(new Font("Arial", Font.BOLD, 24));
         turnoLabel.setHorizontalAlignment(SwingConstants.CENTER);
         turnoLabel.setPreferredSize(new Dimension(300, 50));
-        turnoLabel.setOpaque(true); // Permitir color de fondo
+        turnoLabel.setOpaque(true);
         turnoLabel.setBackground(Color.red);
+        turnoLabel.setForeground(Color.WHITE);
         add(turnoLabel, BorderLayout.NORTH);
 
         botonRendirse.setFont(new Font("Arial", Font.BOLD, 16));
@@ -121,7 +122,7 @@ public class Tablero extends JPanel {
 
                 botones[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-                // Crear ButtonClickListener con movimientosArea
+               
                 botones[i][j].addActionListener(new ButtonClickListener(i, j, movimientosArea));
 
                 panelTablero.add(botones[i][j]);
@@ -204,68 +205,78 @@ public class Tablero extends JPanel {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        JButton boton = (JButton) e.getSource();
-        celda pieza = tableroEstado[fila][columna];
+   public void actionPerformed(ActionEvent e) {
+    JButton boton = (JButton) e.getSource();
+    celda pieza = tableroEstado[fila][columna];
 
-        if (piezaSeleccionada == null && boton.getIcon() != null) {
-            // Seleccionar pieza si es del turno correcto
-            if ((turnoRojo && pieza.esRojo()) || (!turnoRojo && !pieza.esRojo())) {
-                piezaSeleccionada = boton;
-                filaSeleccionada = fila;
-                columnaSeleccionada = columna;
-                piezaSeleccionada.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 3));
+    if (piezaSeleccionada == null && boton.getIcon() != null) {
+        
+        if ((turnoRojo && pieza.esRojo()) || (!turnoRojo && !pieza.esRojo())) {
+            piezaSeleccionada = boton;
+            filaSeleccionada = fila;
+            columnaSeleccionada = columna;
+            piezaSeleccionada.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 3));
 
-                limpiarResaltados(); // Limpia cualquier resaltado anterior
-                resaltarMovimientosValidos(fila, columna);
-            }
-        } else if (piezaSeleccionada != null) {
-            // Si se hace clic en la misma ficha, se deselecciona
-            if (piezaSeleccionada == boton) {
-                piezaSeleccionada.setBorder(BorderFactory.createEmptyBorder());
-                limpiarResaltados(); // Quita los resaltados
-                piezaSeleccionada = null;
-            } else if (boton.getIcon() == null && esMovimientoValido(filaSeleccionada, columnaSeleccionada, fila, columna)) {
-                String movimiento = "Movimiento: de " + jugador + " (" + filaSeleccionada + ", " + columnaSeleccionada + ") -> (" + fila + ", " + columna + ") y movió la pieza " + pieza.getTipoPieza();
-                movimientosArea.append(movimiento + "\n");
+            limpiarResaltados(); 
+            resaltarMovimientosValidos(fila, columna);
+        }
+    } else if (piezaSeleccionada != null) {
+        String piezaMovida = tableroEstado[filaSeleccionada][columnaSeleccionada].getTipoPieza(); 
 
-                moverPieza(filaSeleccionada, columnaSeleccionada, fila, columna);
+       
+        if (piezaSeleccionada == boton) {
+            piezaSeleccionada.setBorder(BorderFactory.createEmptyBorder());
+            limpiarResaltados(); 
+            piezaSeleccionada = null;
+        } 
+        
+        else if (boton.getIcon() == null && esMovimientoValido(filaSeleccionada, columnaSeleccionada, fila, columna)) {
+            String movimiento = "Movimiento: de " + jugador + " movió " + piezaMovida + 
+                                " de (" + filaSeleccionada + ", " + columnaSeleccionada + ") -> (" + fila + ", " + columna + ")";
+            movimientosArea.append(movimiento + "\n");
+
+            moverPieza(filaSeleccionada, columnaSeleccionada, fila, columna);
+            boton.setIcon(piezaSeleccionada.getIcon());
+            piezaSeleccionada.setIcon(null);
+            piezaSeleccionada.setBorder(BorderFactory.createEmptyBorder());
+            limpiarResaltados(); 
+            piezaSeleccionada = null;
+            cambiarTurno();
+        } 
+       
+        else if (boton.getIcon() != null && pieza.esRojo() != turnoRojo) {
+            if (esMovimientoValido(filaSeleccionada, columnaSeleccionada, fila, columna)) {
+                celda piezaCapturada = tableroEstado[fila][columna];
+                String captura = "Captura: de " + jugador + " movió " + piezaMovida + 
+                                 " y capturó " + piezaCapturada.getTipoPieza() + 
+                                 " en (" + fila + ", " + columna + ")";
+                movimientosArea.append(captura + "\n");
+
+                capturarPieza(fila, columna);
                 boton.setIcon(piezaSeleccionada.getIcon());
                 piezaSeleccionada.setIcon(null);
+                moverPieza(filaSeleccionada, columnaSeleccionada, fila, columna);
                 piezaSeleccionada.setBorder(BorderFactory.createEmptyBorder());
-                limpiarResaltados(); // Quita los resaltados
+                limpiarResaltados();
                 piezaSeleccionada = null;
                 cambiarTurno();
-            } // Capturar una pieza
-            else if (boton.getIcon() != null && pieza.esRojo() != turnoRojo) {
-                if (esMovimientoValido(filaSeleccionada, columnaSeleccionada, fila, columna)) {
-                    celda piezaCapturada = tableroEstado[fila][columna];
-                    String captura = "Captura: de " + jugador + " en (" + fila + ", " + columna + ") y la pieza capturada fue " + piezaCapturada.getTipoPieza();
-                    movimientosArea.append(captura + "\n");
-
-                    capturarPieza(fila, columna);
-                    boton.setIcon(piezaSeleccionada.getIcon());
-                    piezaSeleccionada.setIcon(null);
-                    moverPieza(filaSeleccionada, columnaSeleccionada, fila, columna);
-                    piezaSeleccionada.setBorder(BorderFactory.createEmptyBorder());
-                    limpiarResaltados(); // Quita los resaltados
-                    piezaSeleccionada = null;
-                    cambiarTurno();
-                }
             }
         }
     }
+}
 }
 
     public void cambiarTurno() {
 
         turnoRojo = !turnoRojo;
         if (turnoRojo) {
-            turnoLabel.setText("Turno de " + partidas.getInstance().getJugador_1());
+            turnoLabel.setText("Turno de " + partidas.getInstance().getJugador_1()+" JUGADOR COLOR ROJO");
             jugador = partidas.getInstance().getJugador_1();
+            turnoLabel.setBackground(Color.RED);
         } else {
-            turnoLabel.setText("Turno de " + partidas.getInstance().getJugador_2());
+            turnoLabel.setText("Turno de " + partidas.getInstance().getJugador_2() + " JUGADOR COLOR NEGRO");
             jugador = partidas.getInstance().getJugador_2();
+            turnoLabel.setBackground(Color.BLACK);
         }
     }
 
@@ -286,15 +297,11 @@ public class Tablero extends JPanel {
             }
 
             if (piezaCapturada.getTipoPieza().equals("Rey") || piezaCapturada.getTipoPieza().equals("Rey-")) {
-                String ganador = piezaCapturada.esRojo() ? partidas.getInstance().getJugador_2() + " ganaa! por jaque mate" : partidas.getInstance().getJugador_1() + " gana! por jaque mate";
+                String ganador = piezaCapturada.esRojo() ? partidas.getInstance().getJugador_2() + " ganaa! por jaque mate y se lleva los 3 puntos" : partidas.getInstance().getJugador_1() + " gana! por jaque mate y se lleva los 3 puntos ";
                 JOptionPane.showMessageDialog(null, ganador, "Fin del Juego", JOptionPane.INFORMATION_MESSAGE);
                 String log_ganador = turnoRojo ? partidas.getInstance().getJugador_1() + " le gano a " + partidas.getInstance().getJugador_2() + " por Jaque mate" + "\n" : partidas.getInstance().getJugador_2() + " le gano a  " + partidas.getInstance().getJugador_1() + " por Jaque mate \n";
                 String log_perdedor = turnoRojo ? partidas.getInstance().getJugador_2() + " perdio contra " + partidas.getInstance().getJugador_1() + " por Jaque mate" + "\n" : partidas.getInstance().getJugador_1() + " perdio contra " + partidas.getInstance().getJugador_2() + " por Jaque mate \n";
-                System.out.println("Ganador: " + (turnoRojo ? "Jugador 1" : "Jugador 2"));
-                System.out.println("Jugador 1: " + partidas.getInstance().getJugador_1());
-                System.out.println("Jugador 2: " + partidas.getInstance().getJugador_2());
-                System.out.println("Log ganador: " + log_ganador);
-                System.out.println("Log perdedor: " + log_perdedor);
+         
                 partidas.getInstance().distribuir_logs(turnoRojo, log_ganador, log_perdedor);
                 menu_principal mostrar2 = new menu_principal();
                 mostrar2.setVisible(true);
@@ -400,15 +407,15 @@ public class Tablero extends JPanel {
             return false;
         }
 
-        // Guardar el estado actual y simular el movimiento
+       
         celda piezaDestino = tableroEstado[filaFinal][colFinal];
         tableroEstado[filaFinal][colFinal] = pieza;
         tableroEstado[filaInicial][colInicial] = new celda(null, false);
 
-        // Verificar si los reyes se ven
+    
         boolean invalidMove = reyesSeVen();
 
-        // Restaurar el estado original
+       
         tableroEstado[filaInicial][colInicial] = pieza;
         tableroEstado[filaFinal][colFinal] = piezaDestino;
 
@@ -507,7 +514,7 @@ public class Tablero extends JPanel {
             }
 
             return false;
-        } // Movimiento del Caballo
+        }
         else if (pieza.getTipoPieza().equals("Caballo")) {
             movimiento_caballo movimientoCaballo = new movimiento_caballo();
             if (!movimientoCaballo.valido(filaInicial, colInicial, filaFinal, colFinal)) {
@@ -623,7 +630,7 @@ public class Tablero extends JPanel {
     private int contarPiezasIntermedias(int filaInicial, int colInicial, int filaFinal, int colFinal, celda[][] tableroEstado) {
         int contador = 0;
 
-        // Movimiento horizontal
+       
         if (filaInicial == filaFinal) {
             int minCol = Math.min(colInicial, colFinal);
             int maxCol = Math.max(colInicial, colFinal);
@@ -665,7 +672,7 @@ public class Tablero extends JPanel {
             }
         }
 
-        // Verificar si están en la misma columna sin obstáculos entre ellos
+        
         if (columnaReyRojo == columnaReyNegro) {
             int minFila = Math.min(filaReyRojo, filaReyNegro);
             int maxFila = Math.max(filaReyRojo, filaReyNegro);
@@ -674,25 +681,25 @@ public class Tablero extends JPanel {
                     return false; // Hay una pieza bloqueando la vista
                 }
             }
-            return true; // Los reyes se ven
+            return true; 
         }
-        return false; // No están en la misma columna
+        return false; 
     }
 
     private void resaltarMovimientosValidos(int fila, int columna) {
-        for (int i = 0; i < 10; i++) { // Recorremos todas las filas
-            for (int j = 0; j < 9; j++) { // Recorremos todas las columnas
+        for (int i = 0; i < 11; i++) { 
+            for (int j = 0; j < 9; j++) { 
                 if (esMovimientoValido(fila, columna, i, j)) {
-                    botones[i][j].setBorder(BorderFactory.createLineBorder(Color.GREEN, 3)); // Resalta en verde
+                    botones[i][j].setBorder(BorderFactory.createLineBorder(Color.GREEN, 3)); 
                 }
             }
         }
     }
 
     private void limpiarResaltados() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 11; i++) {
             for (int j = 0; j < 9; j++) {
-                botones[i][j].setBorder(BorderFactory.createEmptyBorder()); // Quita el borde
+                botones[i][j].setBorder(BorderFactory.createEmptyBorder()); 
             }
         }
     }

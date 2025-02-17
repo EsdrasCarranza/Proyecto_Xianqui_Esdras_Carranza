@@ -19,6 +19,7 @@ public class Proyecto_Esdras_Carranza_Xianqui {
         SwingUtilities.invokeLater(() -> {
             Intefaz_gui frame = new Intefaz_gui();
             frame.setVisible(true);
+        
         });
         
     }

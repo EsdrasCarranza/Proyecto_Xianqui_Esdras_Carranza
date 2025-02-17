@@ -75,4 +75,3 @@ public class mi_cuenta extends JFrame {
 
     }
 }
-//100, 10, 400, 100);
