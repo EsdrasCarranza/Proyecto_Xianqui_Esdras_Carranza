@@ -17,11 +17,11 @@ public final class celda {
         this.esRojo = esRojo;
     }
 
-    public String getTipoPieza() {
+    public final String getTipoPieza() {
         return tipoPieza;
     }
 
-    public boolean esRojo() {
+    public final boolean esRojo() {
         return esRojo;
     }
 
@@ -29,7 +29,7 @@ public final class celda {
         this.tipoPieza = tipoPieza;
     }
 
-    public void setEsRojo(boolean esRojo) {
+    public final void setEsRojo(boolean esRojo) {
         this.esRojo = esRojo;
     }
 

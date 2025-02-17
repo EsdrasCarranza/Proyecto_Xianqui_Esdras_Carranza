@@ -130,7 +130,7 @@ public class cuentas {
                 return true;
             }
         }
-        JOptionPane.showMessageDialog(null, "Cuenta no encontrada o contraseña incorrecta");
+        JOptionPane.showMessageDialog(null, " contraseña incorrecta  ");
         return false;
     }
 

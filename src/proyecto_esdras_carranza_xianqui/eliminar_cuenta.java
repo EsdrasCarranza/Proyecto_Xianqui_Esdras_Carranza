@@ -72,6 +72,7 @@ public class eliminar_cuenta extends JFrame {
                 if(si){
                     Jugadores.getInstance().eliminar_jugador(partidas.getInstance().getJugador_1());
                     cuentas.getInstance().eliminar_cuenta(partidas.getInstance().getJugador_1());
+                    JOptionPane.showMessageDialog(null," CUENTA ELIMINADA ");
                     Intefaz_gui mostrar = new Intefaz_gui();
                     mostrar.setVisible(true);
                     dispose();
@@ -79,7 +80,7 @@ public class eliminar_cuenta extends JFrame {
                     JOptionPane.showMessageDialog(null,"Error. contraseña incorrecta");
                     campoPassword.setText("");
                 }
-                System.out.println("Contraseña ingresada: " + password);
+               
                 
             }
         });
